@@ -6,6 +6,7 @@
     <title>Lilita One Font Example</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/alpinejs" defer></script>
     <style>
         /* Custom font family for Lilita One */
         .font-lilita {
@@ -35,7 +36,39 @@
 
         .font-bret {
             font-family: 'Lilita One', cursive;
-            color: #9d174d;
+            color: #4a044e;
+        }
+
+        .font-bret-01 {
+            font-family: 'Lilita One', cursive;
+        }
+    </style>
+   <style>
+        .letter {
+            opacity: 0; /* Initially hidden */
+            transform: translateY(10px); /* Move down */
+            transition: opacity 0.5s ease, transform 0.5s ease; /* Animation */
+        }
+        .letter.visible {
+            opacity: 1; /* Fully visible */
+            transform: translateY(0); /* Move to original position */
+        }
+    </style>
+     <style>
+        @keyframes fall {
+            0% {
+                transform: translateY(-50px); /* Start above */
+                opacity: 0; /* Invisible */
+            }
+            100% {
+                transform: translateY(0); /* End at original position */
+                opacity: 1; /* Fully visible */
+            }
+        }
+        .letter-in {
+            display: inline-block; /* Allows for individual animations */
+            opacity: 0; /* Initially hidden */
+            animation: fall 0.5s ease forwards; /* Animation */
         }
     </style>
 </head>
@@ -47,12 +80,12 @@
     </div>
 
     <div class="flex flex-col justify-center items-center pt-4">
-        <div>
-            <h1 class="font-lilita text-5xl text-white">BLUE BREET</h1>
+        <div class="text-5xl text-white font-lilita">
+            <span id="animated-text"></span>
         </div>
-        <div> 
-            <h1 class="font-lilita text-3xl text-white">NOW ON BASE</h1>
-        </div> 
+        <div class="text-3xl text-white font-lilita">
+            <span id="animated-text-01"></span>
+        </div>
         <div class="m-4"> 
             <h1 class="font-rubik-bubbles text-1xl text-white">CA : 0x445123do312h4134k12k24</h1>
         </div>   
@@ -127,11 +160,11 @@
 
     <div class="flex flex-col justify-center items-center pt-12">
         <div>
-            <h1 class="font-lilita text-3xl text-white">ABOUT BLUE BREET</h1>
+            <h1 class="font-lilita text-3xl text-white"><span id="animation-about"></span></h1>
         </div>
         <div class="max-w-xl mx-auto overflow-hidden max-w-5xl">
         <div class="m-4 items-center text-justify"> 
-            <h1 class="font-rubik-bubbles text-1xl text-white">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Atque eius a ipsam doloremque. Fuga unde iure voluptas eos, quia recusandae vel aliquam quisquam! Delectus fugiat perspiciatis laborum excepturi dicta odit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint hic quaerat animi labore. Perspiciatis laborum a nam impedit reprehenderit corrupti ad labore ut. Ex quia accusantium, tempora voluptate nobis laudantium.</h1>
+            <h1 class="font-rubik-bubbles text-1xl text-white"><span id="animation-about-widht"></span></h1>
         </div>  
         </div> 
     </div>
@@ -139,31 +172,93 @@
 
     <div class="flex flex-col justify-center items-center  pt-12">
         <div>
-            <h1 class="font-lilita text-3xl text-white">BUY NOW</h1>
+            <h1 class="font-lilita text-3xl text-white">HOW TO BUY</h1>
         </div>
         <div class="p-6">
-            <div class="flex flex-col">
-                <div class="flex justify-around m-4 items-center mx-auto max-w-5xl min-[800px]">
-                  <div class="flex  items-center max-w-5xl min-[800px] border-1">
-                    <div class="flex flex-col w-full rounded-lg bg-white shadow">
-                      <div class="p-1 m-4">
-                        <h1 class="font-bret text-2xl text-white">STEP BUY</h1>
-                      </div>
-                      <div class="text-center m-4">
-                        <div class="items-center text-justify"> 
-                            <h1 class="font-rubik text-1xl">1. Download the METAMASK extension from the official website and install it in your browser. Fund it by transferring base eth</h1>
-                            </br>
-                            <h1 class="font-rubik text-1xl">2. Connect to a decentralized exchange (DEX) like MATCHA, LI.FI, or any fitting. Open the DEX website and click on “Connect Wallet”.Then select METAMASK</h1>
-                            </br>
-                            <h1 class="font-rubik text-1xl">3. To swap Base for $BLUEBREET, purchase tokens on the ape store</h1>
-                            </br>
-                            <h1 class="font-rubik text-1xl">4. Verify your transaction status in MetaMask under the activity tab, or using basescan and your base address. Import into your MetaMask wallet using the CA.</h1>
-                        </div>  
+            <div class="flex justify-center">
+                <div class="flex flex-col">
+                    <div class="flex justify-around m-4 items-center mx-auto max-w-5xl min-[800px]">
+                      <div class="flex items-center max-w-5xl min-[800px]">
+                        <div class="flex flex-col w-full bg-gray-300 rounded-lg shadow-md overflow-hidden border-8 border-[#4a044e]">
+                          <div class="p-1 m-4">
+                            <h1 class="font-bret text-2xl text-white">STEP BUY</h1>
+                          </div>
+                
+                          <!-- Accordion Section -->
+                          <div class="max-300">
+                              <div x-data="{ open: false }">
+                                  <button @click="open = !open" class="w-full text-center text-left bg-gray-500 text-white py-2 px-4 focus:outline-none">
+                                    <h2 class="font-bret text-xl w-48">CREATE A WALLET</h2>
+                                  </button>
+                                  <div x-show="open" class="text-center m-4 p-4 bg-gray-300 rounded-lg">
+                                    <div class="items-center text-justify justify-start">
+                                        <h1 class="font-bret-01 not-italic text-red-900 text-lg leading-tight tracking-tight m-0 p-0">
+                                          Download the METAMASK extension from the official website and install it in your browser. Fund it by transferring base ETH.
+                                        </h1>
+                                      </div>
+                              </div> 
+                          </div>
+                          <!-- End Accordion Section -->
+      
+                           <!-- Accordion Section -->
+                           <div class="max-300">
+                              <div x-data="{ open: false }">
+                                  <button @click="open = !open" class="w-full text-center text-left bg-gray-500 text-white py-2 px-4 focus:outline-none">
+                                    <h2 class="font-bret text-xl w-48">CONNECT TO DEX</h2>
+                                  </button>
+                                  <div x-show="open" class="text-center m-4 p-4 bg-gray-300 rounded-lg">
+                                    <div class="items-center text-justify justify-start">
+                                        <h1 class="font-bret-01 not-italic text-red-900 text-lg leading-tight tracking-tight m-0 p-0">
+                                            Connect to a decentralized exchange (DEX) like MATCHA, LI.FI, or any fitting. Open the DEX website and click on “Connect Wallet”.Then select METAMASK 
+                                        </h1>
+                                      </div>
+                              </div> 
+                          </div>
+                          <!-- End Accordion Section -->
+      
+                           <!-- Accordion Section -->
+                           <div class="max-300">
+                              <div x-data="{ open: false }">
+                                  <button @click="open = !open" class="w-full text-center text-left bg-gray-500 text-white py-2 px-4 focus:outline-none">
+                                    <h2 class="font-bret text-xl w-48">SWAP BASE FOR $BLUEBREET</h2>
+                                  </button>
+                                  <div x-show="open" class="text-center m-4 p-4 bg-gray-300 rounded-lg">
+                                    <div class="items-center text-justify justify-start">
+                                        <h1 class="font-bret-01 not-italic text-red-900 text-lg leading-tight tracking-tight m-0 p-0">
+                                            To swap Base for $BLUEBREET, purchase tokens on the ape store  
+                                        </h1>
+                                      </div>
+                              </div> 
+                          </div>
+                          <!-- End Accordion Section -->
+      
+                          <!-- Accordion Section -->
+                          <div class="max-300">
+                              <div x-data="{ open: false }">
+                                  <button @click="open = !open" class="w-full text-center text-left bg-gray-500 text-white py-2 px-4 focus:outline-none">
+                                    <h2 class="font-bret text-xl w-48">VERIFY & MANAGE</h2>
+                                  </button>
+                                  <div x-show="open" class="text-center m-4 p-4 bg-gray-300 rounded-lg">
+                                    <div class="items-center text-justify justify-start">
+                                        <h1 class="font-bret-01 not-italic text-red-900 text-lg leading-tight tracking-tight m-0 p-0">
+                                            Verify your transaction status in MetaMask under the activity tab, or using basescan and your base address. Import into your MetaMask wallet using the CA.
+                                        </h1>
+                                      </div>
+                              </div> 
+                          </div>
+                          <!-- End Accordion Section -->
+                          
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col justify-center items-center text-center  pt-12">
+        <div>
+            <h1 class="font-lilita text-3xl text-white">LAUNCHING IN APESTORE</h1>
         </div>
     </div>
   
@@ -171,14 +266,84 @@
         <div class="mx-auto w-full max-w-screen-xl p-10">
           <div class="px-4 py-6 dark:bg-gray-700 md:flex md:items-center md:justify-between">
             <span class="text-sm fantasy-text-true font-rubik text-white text-black dark:text-gray-300 sm:text-center">
-              © 2024 <a href="https://flowbite.com/">Blue BREET</a>. ON BASE
-              MEMECOIN.
+              ©CopyRight <a href="https://flowbite.com/">Blue Brett</a>. On Base
+              Memecoin.
             </span>
           </div>
         </div>
       </footer>
 
+      
 </body>
+<script>
+    const text = "BLUE BREET";
+    const container = document.getElementById("animated-text");
+
+    // Split text into individual letters and create spans
+    text.split('').forEach((letter, index) => {
+        const span = document.createElement("span");
+        span.className = "letter";
+        span.textContent = letter === " " ? "\u00A0" : letter; // Keep spaces
+        container.appendChild(span);
+
+        // Delay each letter's animation
+        setTimeout(() => {
+            span.classList.add("visible");
+        }, index * 300); // Change 300 for different delays
+    });
+</script>
+
+<script>
+    const text01 = "NOW ON BASE";
+    const container01 = document.getElementById("animated-text-01");
+
+    // Split text into individual letters and create spans
+    text01.split('').forEach((letter, index) => {
+        const span = document.createElement("span");
+        span.className = "letter";
+        span.textContent = letter === " " ? "\u00A0" : letter; // Keep spaces
+        container01.appendChild(span);
+
+        // Delay each letter's animation
+        setTimeout(() => {
+            span.classList.add("visible");
+        }, index * 300); // Change 300 for different delays
+    });
+</script>
+
+
+
+<script>
+    const text03 = "ABOUT BLUE BREET";
+    const container03 = document.getElementById("animation-about");
+
+    // Split text into individual letters and create spans
+    text03.split('').forEach((letter, index) => {
+        const span = document.createElement("span");
+        span.className = "letter-in";
+        span.textContent = letter === " " ? "\u00A0" : letter; // Keep spaces
+        container03.appendChild(span);
+
+        // Delay each letter's animation
+        span.style.animationDelay = `${index * 200}ms`; // Adjust delay time here
+    });
+</script>
+
+<script>
+    const text04 = "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Atque eius a ipsam doloremque. Fuga unde iure voluptas eos, quia recusandae vel aliquam quisquam! Delectus fugiat perspiciatis laborum excepturi dicta odit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint hic quaerat animi labore. Perspiciatis laborum a nam impedit reprehenderit corrupti ad labore ut. Ex quia accusantium, tempora voluptate nobis laudantium.";
+    const container04 = document.getElementById("animation-about-widht");
+
+    // Split text into individual letters and create spans
+    text04.split('').forEach((letter, index) => {
+        const span = document.createElement("span");
+        span.className = "letter-in";
+        span.textContent = letter === " " ? "\u00A0" : letter; // Keep spaces
+        container04.appendChild(span);
+
+        // Delay each letter's animation
+        span.style.animationDelay = `${index * 200}ms`; // Adjust delay time here
+    });
+</script>
 </html>
 
 
